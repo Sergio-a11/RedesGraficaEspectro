@@ -27,8 +27,10 @@ function grafica(data) {
           data: [
             -100,
             -100,
-            Number(convertirDbwToDbm(convertirWattsToDbw(data.varPotencia))) +
-              Number(data.varAntenaSatelite),
+            (
+              Number(convertirDbwToDbm(convertirWattsToDbw(data.varPotencia))) +
+              Number(data.varAntenaSatelite)
+            ).toFixed(2),
             -100,
             -100,
           ],
@@ -106,7 +108,7 @@ function verificarEnlace(data) {
   En tanto se concluye que ${
     pelGrafico < PelTransmission
       ? '<b style="color:red;">No</b> se puede establecer enlace'
-      : '<b>Si</b> se puede establecer enlace'
+      : '<b style="color:red;">Si</b> se puede establecer enlace'
   }`;
 }
 
