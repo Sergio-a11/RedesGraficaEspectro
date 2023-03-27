@@ -1,0 +1,12 @@
+#myChart {
+  max-height: 600px;
+  max-width: 1200px;
+}
+
+.inputVars{
+  border: none;
+  background-color: lightgrey;
+  width : 5rem;
+  border-radius: 5%;
+  margin: 0px 5px 5px 5px;
+}
