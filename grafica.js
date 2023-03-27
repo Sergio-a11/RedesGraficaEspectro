@@ -16,11 +16,11 @@ function grafica(data) {
     type: 'line',
     data: {
       labels: [
-        data.varFrecuencia - data.varAnchoBanda * 2,
-        data.varFrecuencia - data.varAnchoBanda,
+        data.varFrecuencia - Number(data.varAnchoBanda / 2) * 2,
+        data.varFrecuencia - Number(data.varAnchoBanda / 2),
         data.varFrecuencia,
-        Number(data.varFrecuencia) + Number(data.varAnchoBanda),
-        Number(data.varFrecuencia) + Number(data.varAnchoBanda) * 2,
+        Number(data.varFrecuencia) + Number(data.varAnchoBanda / 2),
+        Number(data.varFrecuencia) + Number(data.varAnchoBanda / 2) * 2,
       ],
       datasets: [
         {
