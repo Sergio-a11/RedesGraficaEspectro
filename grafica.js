@@ -2,7 +2,7 @@ document.querySelector('#form1').addEventListener('submit', (e) => {
   e.preventDefault(); //no reeenvio
   data = Object.fromEntries(new FormData(e.target));
   grafica(data);
-  console.log(calcularPire(data));
+  //console.log(calcularPire(data));
 
   console.log(data);
   console.log(data['varAnchoBanda']);
@@ -11,6 +11,12 @@ document.querySelector('#form1').addEventListener('submit', (e) => {
 function grafica(data) {
   console.log(JSON.stringify(data));
   const ctx = document.getElementById('myChart');
+
+  let potencia = data.unidadPotencia;
+  if (potencia === 'w')
+    potencia = convertirDbwToDbm(convertirWattsToDbw(data.varPotencia));
+  else if (potencia === 'dbw') potencia = convertirDbwToDbm(data.varPotencia);
+  else potencia = data.varPotencia;
 
   new Chart(ctx, {
     type: 'line',
@@ -27,10 +33,7 @@ function grafica(data) {
           data: [
             -100,
             -100,
-            (
-              Number(convertirDbwToDbm(convertirWattsToDbw(data.varPotencia))) +
-              Number(data.varAntenaSatelite)
-            ).toFixed(2),
+            (Number(potencia) + Number(data.varAntenaSatelite)).toFixed(2),
             -100,
             -100,
           ],
@@ -58,9 +61,9 @@ function grafica(data) {
   });
 
   //comienzo de segundo punto
-  verificarEnlace(data);
+  verificarEnlace(data, potencia);
   //comienzo de tercer punto
-  calcularAmplificacionFaltante(data);
+  calcularAmplificacionFaltante(data, potencia);
 }
 
 function convertirWattsToDbw(value) {
@@ -82,25 +85,22 @@ function calcularPEL(distancia, frecuencia) {
   ).toFixed(2);
 }
 
-function calcularPire(data) {
-  return (
-    Number(convertirDbwToDbm(convertirWattsToDbw(data.varPotencia))) +
-    Number(data.varAntenaSatelite)
-  );
+function calcularPire(data, potencia) {
+  return Number(potencia) + Number(data.varAntenaSatelite);
 }
 
-function calcularPELGrafico(data) {
+function calcularPELGrafico(data, potencia) {
   return (
-    calcularPire(data) +
+    calcularPire(data, potencia) +
     Number(data.varAntenaReceptor) +
     Number(data.varUmbral * -1) -
     20
   );
 }
 
-function verificarEnlace(data) {
-  let pelGrafico = calcularPELGrafico(data);
-  let PelTransmission = calcularPEL(data.varOrbita * 1000, data.varFrecuencia);
+function verificarEnlace(data, potencia) {
+  let pelGrafico = calcularPELGrafico(data, potencia);
+  let PelTransmission = calcularPEL(data.varOrbita, data.varFrecuencia);
   let verificarEnlace = document.getElementById('verificarEnlace');
   verificarEnlace.innerHTML = `
   <br>2. El valor maximo de PEL que puede perder la transmisión es: <b>${pelGrafico}</b>
@@ -112,8 +112,8 @@ function verificarEnlace(data) {
   }`;
 }
 
-function calcularAmplificacionFaltante(data) {
-  let pelGrafico = calcularPELGrafico(data);
+function calcularAmplificacionFaltante(data, potencia) {
+  let pelGrafico = calcularPELGrafico(data, potencia);
   let PelTransmission = calcularPEL(36000, data.varFrecuencia);
   let verificarEnlace = document.getElementById('amplificaciónFaltante');
   verificarEnlace.innerHTML = `
