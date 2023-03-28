@@ -10,3 +10,9 @@
   border-radius: 5%;
   margin: 0px 5px 5px 5px;
 }
+p {
+  margin-top: 2em;
+  padding: 1em 1em 1em 1em;
+  border: 3px solid;
+  border-color: rgb(206, 240, 206);
+}
